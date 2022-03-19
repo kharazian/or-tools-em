@@ -12,8 +12,7 @@
 // limitations under the License.
 
 #include "ortools/graph/min_cost_flow.h"
-
-#include "ortools/base/logging.h"
+#include <iostream>
 
 namespace operations_research {
 struct Arc {
@@ -24,7 +23,7 @@ struct Arc {
 
 void SolveMinCostFlow() {
   // Define supply of each node.
-  const std::vector<std::pair<NodeIndex, FlowQuantity> > supplies = {
+  const std::vector<std::pair<NodeIndex, FlowQuantity>> supplies = {
       {0, 20}, {1, 0}, {2, 0}, {3, -5}, {4, -15}};
 
   // Define each arc
@@ -38,38 +37,36 @@ void SolveMinCostFlow() {
 
   StarGraph graph(supplies.size(), arcs.size());
   MinCostFlow min_cost_flow(&graph);
-  for (const auto& it : arcs) {
+  for (const auto &it : arcs) {
     ArcIndex arc = graph.AddArc(it.nodes.first, it.nodes.second);
     min_cost_flow.SetArcCapacity(arc, it.capacity);
     min_cost_flow.SetArcUnitCost(arc, it.unit_cost);
   }
-  for (const auto& it : supplies) {
+  for (const auto &it : supplies) {
     min_cost_flow.SetNodeSupply(it.first, it.second);
   }
 
-  LOG(INFO) << "Solving min cost flow with: " << graph.num_nodes()
-            << " nodes, and " << graph.num_arcs() << " arcs.";
+  std::cout << "Solving min cost flow with: " << graph.num_nodes()
+            << " nodes, and " << graph.num_arcs() << " arcs." << std::endl;
 
   // Find the maximum flow between node 0 and node 4.
   min_cost_flow.Solve();
   if (MinCostFlow::OPTIMAL != min_cost_flow.status()) {
-    LOG(FATAL) << "Solving the max flow is not optimal!";
+    std::cout << "Solving the max flow is not optimal!" << std::endl;
   }
   FlowQuantity total_flow_cost = min_cost_flow.GetOptimalCost();
-  LOG(INFO) << "Minimum cost flow: " << total_flow_cost;
-  LOG(INFO) << "";
-  LOG(INFO) << "Arc   : Flow / Capacity / Cost";
+  std::cout  << "Minimum cost flow: " << total_flow_cost << std::endl;
+  std::cout  << "" << std::endl;
+  std::cout  << "Arc   : Flow / Capacity / Cost" << std::endl;
   for (int i = 0; i < arcs.size(); ++i) {
-    LOG(INFO) << graph.Tail(i) << " -> " << graph.Head(i) << ": "
+    std::cout  << graph.Tail(i) << " -> " << graph.Head(i) << ": "
               << min_cost_flow.Flow(i) << " / " << min_cost_flow.Capacity(i)
-              << " / " << min_cost_flow.UnitCost(i);
+              << " / " << min_cost_flow.UnitCost(i) << std::endl;
   }
 }
 }  // namespace operations_research
 
-int main(int argc, char** argv) {
-  google::InitGoogleLogging(argv[0]);
-  absl::SetFlag(&FLAGS_logtostderr, 1);
+int main(int argc, char **argv) {
   operations_research::SolveMinCostFlow();
   return EXIT_SUCCESS;
 }

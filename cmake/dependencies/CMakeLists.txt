@@ -82,6 +82,9 @@ if(BUILD_Protobuf)
   set(protobuf_BUILD_TESTS OFF)
   set(protobuf_BUILD_EXPORT OFF)
   set(protobuf_MSVC_STATIC_RUNTIME OFF)
+  if(CMAKE_CROSSCOMPILING)
+    set(protobuf_BUILD_PROTOC_BINARIES OFF)
+  endif()
   # FetchContent_Declare(SOURCE_SUBDIR) was introduced in 3.18
   if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.18")
     FetchContent_Declare(

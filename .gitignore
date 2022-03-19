@@ -1,6 +1,10 @@
 Makefile.local
 Makefile.local~
 
+emscripten
+wasmbuild
+wasmpoc
+
 dependencies/
 include/
 share/
