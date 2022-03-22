@@ -66,7 +66,7 @@ void SolveMinCostFlow() {
 }
 }  // namespace operations_research
 
-int main(int argc, char **argv) {
+int main() {
   operations_research::SolveMinCostFlow();
   return EXIT_SUCCESS;
 }
